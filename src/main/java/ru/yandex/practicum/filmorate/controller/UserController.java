@@ -20,12 +20,16 @@ public class UserController {
     private final Map<Long, User> users = new HashMap<>();
     private long nextId = 1;
 
-    @PostMapping
-    public User create(@Valid @RequestBody User user) {
-
+    private void setNameIfEmpty(User user) {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
+    }
+
+    @PostMapping
+    public User create(@Valid @RequestBody User user) {
+
+        setNameIfEmpty(user);
 
         user.setId(nextId++);
         users.put(user.getId(), user);
@@ -40,10 +44,7 @@ public class UserController {
             throw new ValidationException("Пользователь с id=" + user.getId() + " не найден");
         }
 
-
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
+        setNameIfEmpty(user);
 
         users.put(user.getId(), user);
         log.info("Пользователь обновлен: {}", user);
@@ -52,6 +53,7 @@ public class UserController {
 
     @GetMapping
     public List<User> getAll() {
+        log.info("Получен список пользователей");
         return new ArrayList<>(users.values());
     }
 }

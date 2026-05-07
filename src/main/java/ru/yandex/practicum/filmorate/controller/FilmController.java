@@ -33,7 +33,7 @@ public class FilmController {
     public Film update(@Valid @RequestBody Film film) {
         if (film.getId() == null || !films.containsKey(film.getId())) {
             log.warn("Попытка обновления несуществующего фильма с id: {}", film.getId());
-            throw new ValidationException("Фильм с id= " + film.getId() + "не найден");
+            throw new ValidationException("Фильм с id= " + film.getId() + " не найден");
         }
 
         films.put(film.getId(), film);
@@ -43,6 +43,7 @@ public class FilmController {
 
     @GetMapping
     public List<Film> getAll() {
+        log.info("Получен список фильмов");
         return new ArrayList<>(films.values());
     }
 }
