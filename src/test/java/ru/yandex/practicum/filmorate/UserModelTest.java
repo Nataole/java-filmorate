@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,7 +31,8 @@ public class UserModelTest {
                 "test@mail.ru",
                 "login",
                 "Name",
-                LocalDate.of(2000, 1, 1)
+                LocalDate.of(2000, 1, 1),
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
@@ -45,7 +47,8 @@ public class UserModelTest {
                 "",
                 "login",
                 "Name",
-                LocalDate.of(2000, 1, 1)
+                LocalDate.of(2000, 1, 1),
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
@@ -60,7 +63,8 @@ public class UserModelTest {
                 "mail.ru",
                 "login",
                 "Name",
-                LocalDate.of(2000, 1, 1)
+                LocalDate.of(2000, 1, 1),
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
@@ -75,7 +79,8 @@ public class UserModelTest {
                 "test@mail.ru",
                 "",
                 "Name",
-                LocalDate.of(2000, 1, 1)
+                LocalDate.of(2000, 1, 1),
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
@@ -90,7 +95,8 @@ public class UserModelTest {
                 "test@mail.ru",
                 "   ",
                 "Name",
-                LocalDate.of(2000, 1, 1)
+                LocalDate.of(2000, 1, 1),
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
@@ -105,7 +111,8 @@ public class UserModelTest {
                 "test@mail.ru",
                 "bad login",
                 "Name",
-                LocalDate.of(2000, 1, 1)
+                LocalDate.of(2000, 1, 1),
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
@@ -120,7 +127,8 @@ public class UserModelTest {
                 "test@mail.ru",
                 "login",
                 "",
-                LocalDate.of(2000, 1, 1)
+                LocalDate.of(2000, 1, 1),
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
@@ -135,7 +143,8 @@ public class UserModelTest {
                 "test@mail.ru",
                 "login",
                 "Name",
-                LocalDate.now().plusDays(1)
+                LocalDate.now().plusDays(1),
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
@@ -150,7 +159,8 @@ public class UserModelTest {
                 "test@mail.ru",
                 "login",
                 "Name",
-                LocalDate.now()
+                LocalDate.now(),
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);

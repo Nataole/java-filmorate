@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,7 +31,8 @@ public class FilmModelTest {
                 "Film",
                 "Description",
                 LocalDate.of(2000, 1, 1),
-                120L
+                120L,
+                 new HashSet<>()
         );
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
@@ -45,7 +47,8 @@ public class FilmModelTest {
                 "",
                 "Description",
                 LocalDate.of(2000, 1, 1),
-                120L
+                120L,
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
@@ -60,7 +63,8 @@ public class FilmModelTest {
                 "Film",
                 "a".repeat(201),
                 LocalDate.of(2000, 1, 1),
-                120L
+                120L,
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
@@ -75,7 +79,8 @@ public class FilmModelTest {
                 "Film",
                 "a".repeat(200),
                 LocalDate.of(2000, 1, 1),
-                100L
+                100L,
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
@@ -90,7 +95,8 @@ public class FilmModelTest {
                 "Film",
                 "Description",
                 LocalDate.of(1895, 12, 27),
-                120L
+                120L,
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
@@ -105,7 +111,8 @@ public class FilmModelTest {
                 "Film",
                 "Description",
                 LocalDate.of(1895, 12, 28),
-                120L
+                120L,
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
@@ -121,7 +128,8 @@ public class FilmModelTest {
                 "Film",
                 "Description",
                 LocalDate.of(2000, 1, 1),
-                -1L
+                -1L,
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
@@ -136,7 +144,8 @@ public class FilmModelTest {
                 "Film",
                 "Description",
                 LocalDate.of(2000, 1, 1),
-                0L
+                0L,
+                new HashSet<>()
         );
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);

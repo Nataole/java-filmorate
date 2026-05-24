@@ -9,12 +9,13 @@ import lombok.experimental.FieldDefaults;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
 public class User {
     Long id;
 
@@ -31,6 +32,8 @@ public class User {
     @NotNull(message = "Дата рождения не может быть пустой")
     @PastOrPresent(message = "Дата рождения не может быть в будущем")
     LocalDate birthday;
+
+    Set<Long> friends = new HashSet<>();
 }
 
 
