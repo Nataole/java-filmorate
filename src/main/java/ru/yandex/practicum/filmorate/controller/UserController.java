@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.controller;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -20,15 +19,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    private void setNameIfEmpty(User user) {
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-    }
 
     @PostMapping
     public User create(@Valid @RequestBody User user) {
-        setNameIfEmpty(user);
         User createdUser = userService.create(user);
         log.info("Пользователь создан: {}", createdUser);
         return createdUser;
@@ -36,13 +29,6 @@ public class UserController {
 
     @PutMapping
     public User update(@Valid @RequestBody User user) {
-        if (user.getId() == null || userService.getById(user.getId()) == null) {
-            log.warn("Попытка обновления несуществующего пользователя с id: {}", user.getId());
-            throw new NotFoundException("Пользователь с id=" + user.getId() + " не найден");
-        }
-
-        setNameIfEmpty(user);
-
         User updatedUser = userService.update(user);
         log.info("Пользователь обновлен: {}", updatedUser);
         return updatedUser;
@@ -57,11 +43,6 @@ public class UserController {
     @GetMapping("/{id}")
     public User getById(@PathVariable Long id) {
         User user = userService.getById(id);
-
-        if (user == null) {
-            throw new NotFoundException("Пользователь с id=" + id + " не найден");
-        }
-
         log.info("Получен пользователь с id={}", id);
         return user;
     }

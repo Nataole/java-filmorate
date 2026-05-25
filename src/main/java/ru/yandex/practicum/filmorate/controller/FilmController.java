@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import jakarta.validation.Valid;
 import ru.yandex.practicum.filmorate.service.FilmService;
@@ -31,11 +30,6 @@ public class FilmController {
 
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
-        if (film.getId() == null || filmService.getById(film.getId()) == null) {
-            log.warn("Попытка обновления несуществующего фильма с id: {}", film.getId());
-            throw new NotFoundException("Фильм с id=" + film.getId() + " не найден");
-        }
-
         Film updatedFilm = filmService.update(film);
         log.info("Фильм обновлен: {}", updatedFilm);
         return updatedFilm;
@@ -57,10 +51,6 @@ public class FilmController {
     public Film getById(@PathVariable Long id) {
         Film film = filmService.getById(id);
 
-        if (film == null) {
-            throw new NotFoundException("Фильм с id=" + id + " не найден");
-        }
-
         log.info("Получен фильм с id={}", id);
         return film;
     }
@@ -76,7 +66,5 @@ public class FilmController {
         log.info("Пользователь id={} удалил лайк у фильма id={}", userId, id);
         return filmService.removeLike(id, userId);
     }
-
-
 }
 

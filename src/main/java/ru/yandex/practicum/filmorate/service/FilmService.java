@@ -2,10 +2,10 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
-
 
 import java.util.List;
 
@@ -24,6 +24,11 @@ public class FilmService {
     }
 
     public Film update(Film film) {
+        if (film.getId() == null) {
+            throw new NotFoundException("Фильм не найден");
+        }
+
+        getById(film.getId());
         return filmStorage.update(film);
     }
 
@@ -32,19 +37,14 @@ public class FilmService {
     }
 
     public Film getById(Long id) {
-        return filmStorage.getById(id);
+        return filmStorage.getById(id)
+                .orElseThrow(() ->
+                        new NotFoundException("Фильм с id=" + id + " не найден"));
     }
 
     public Film addLike(Long filmId, Long userId) {
         Film film = getById(filmId);
-
-        if (film == null || userStorage.getById(userId) == null) {
-            throw new NotFoundException(
-                    "Фильм с id=" + filmId
-                            + " или пользователь с id=" + userId
-                            + " не найден"
-            );
-        }
+        checkUserExists(userId);
 
         film.getLikes().add(userId);
         return film;
@@ -52,14 +52,7 @@ public class FilmService {
 
     public Film removeLike(Long filmId, Long userId) {
         Film film = getById(filmId);
-
-        if (film == null || userStorage.getById(userId) == null) {
-            throw new NotFoundException(
-                    "Фильм с id=" + filmId
-                            + " или пользователь с id=" + userId
-                            + " не найден"
-            );
-        }
+        checkUserExists(userId);
 
         film.getLikes().remove(userId);
         return film;
@@ -70,11 +63,26 @@ public class FilmService {
             count = 10;
         }
 
+        if (count <= 0) {
+            throw new ValidationException(
+                    "Количество фильмов должно быть положительным"
+            );
+        }
+
         return filmStorage.getAll().stream()
                 .sorted((f1, f2) ->
                         Integer.compare(f2.getLikes().size(),
                                 f1.getLikes().size()))
                 .limit(count)
                 .toList();
+    }
+
+
+    private void checkUserExists(Long userId) {
+        userStorage.getById(userId)
+                .orElseThrow(() ->
+                        new NotFoundException(
+                                "Пользователь с id=" + userId + " не найден"
+                        ));
     }
 }
