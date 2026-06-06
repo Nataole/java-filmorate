@@ -8,12 +8,13 @@ import lombok.experimental.FieldDefaults;
 
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
 public class Film {
 
     Long id;
@@ -32,9 +33,11 @@ public class Film {
     Long duration;
 
     @AssertTrue(message = "Дата релиза не должна быть раньше 28 декабря 1895 года")
-    public boolean isReleaseDateValid() {
+    public boolean isValidReleaseDate() {
         return releaseDate != null
                 && !releaseDate.isBefore(LocalDate.of(1895, 12, 28));
     }
+
+    Set<Long> likes = new HashSet<>();
 
 }
