@@ -210,12 +210,12 @@ public class FilmDbStorage implements FilmStorage {
 
     private Set<Genre> getGenres(Long filmId) {
         String sql = """
-            SELECT g.id, g.name
-            FROM genres g
-            JOIN film_genres fg ON g.id = fg.genre_id
-            WHERE fg.film_id = ?
-            ORDER BY g.id
-            """;
+                SELECT g.id, g.name
+                FROM genres g
+                JOIN film_genres fg ON g.id = fg.genre_id
+                WHERE fg.film_id = ?
+                ORDER BY g.id
+                """;
 
         return new LinkedHashSet<>(jdbcTemplate.query(
                 sql,
@@ -247,12 +247,13 @@ public class FilmDbStorage implements FilmStorage {
             );
         }
     }
+
     @Override
     public void addLike(Long filmId, Long userId) {
         String sql = """
-            INSERT INTO likes (film_id, user_id)
-            VALUES (?, ?)
-            """;
+                INSERT INTO likes (film_id, user_id)
+                VALUES (?, ?)
+                """;
 
         jdbcTemplate.update(sql, filmId, userId);
     }
@@ -260,9 +261,9 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public void removeLike(Long filmId, Long userId) {
         String sql = """
-            DELETE FROM likes
-            WHERE film_id = ? AND user_id = ?
-            """;
+                DELETE FROM likes
+                WHERE film_id = ? AND user_id = ?
+                """;
 
         jdbcTemplate.update(sql, filmId, userId);
     }
@@ -270,26 +271,26 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public List<Film> getPopularFilms(Integer count) {
         String sql = """
-            SELECT f.id,
-                   f.name,
-                   f.description,
-                   f.release_date,
-                   f.duration,
-                   f.mpa_id,
-                   m.name AS mpa_name
-            FROM films f
-            LEFT JOIN mpa m ON f.mpa_id = m.id
-            LEFT JOIN likes l ON f.id = l.film_id
-            GROUP BY f.id,
-                     f.name,
-                     f.description,
-                     f.release_date,
-                     f.duration,
-                     f.mpa_id,
-                     m.name
-            ORDER BY COUNT(l.user_id) DESC, f.id
-            LIMIT ?
-            """;
+                SELECT f.id,
+                       f.name,
+                       f.description,
+                       f.release_date,
+                       f.duration,
+                       f.mpa_id,
+                       m.name AS mpa_name
+                FROM films f
+                LEFT JOIN mpa m ON f.mpa_id = m.id
+                LEFT JOIN likes l ON f.id = l.film_id
+                GROUP BY f.id,
+                         f.name,
+                         f.description,
+                         f.release_date,
+                         f.duration,
+                         f.mpa_id,
+                         m.name
+                ORDER BY COUNT(l.user_id) DESC, f.id
+                LIMIT ?
+                """;
 
         List<Film> films = jdbcTemplate.query(
                 sql,

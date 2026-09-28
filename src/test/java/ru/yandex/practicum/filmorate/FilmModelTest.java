@@ -32,7 +32,7 @@ public class FilmModelTest {
                 "Description",
                 LocalDate.of(2000, 1, 1),
                 120L,
-                 new HashSet<>(),
+                new HashSet<>(),
                 null,
                 new HashSet<>()
 

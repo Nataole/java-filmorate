@@ -141,13 +141,14 @@ public class UserDbStorage implements UserStorage {
                 )
         );
 
-        }
+    }
+
     @Override
     public void addFriend(Long userId, Long friendId) {
         String sql = """
-            INSERT INTO friendships (user_id, friend_id)
-            VALUES (?, ?)
-            """;
+                INSERT INTO friendships (user_id, friend_id)
+                VALUES (?, ?)
+                """;
 
         jdbcTemplate.update(sql, userId, friendId);
     }
@@ -155,11 +156,11 @@ public class UserDbStorage implements UserStorage {
     @Override
     public void removeFriend(Long userId, Long friendId) {
         String sql = """
-            DELETE FROM friendships
-            WHERE user_id = ? AND friend_id = ?
-            """;
+                DELETE FROM friendships
+                WHERE user_id = ? AND friend_id = ?
+                """;
 
         jdbcTemplate.update(sql, userId, friendId);
-         }
     }
+}
 
