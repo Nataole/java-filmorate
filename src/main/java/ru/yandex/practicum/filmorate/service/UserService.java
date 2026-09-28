@@ -5,6 +5,7 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 
@@ -14,7 +15,9 @@ public class UserService {
 
     private final UserStorage userStorage;
 
-    public UserService(UserStorage userStorage) {
+    public UserService(
+            @Qualifier("userDbStorage") UserStorage userStorage
+    ) {
         this.userStorage = userStorage;
     }
 
@@ -43,24 +46,22 @@ public class UserService {
 
     public User addFriend(Long id, Long friendId) {
         checkDifferentUsers(id, friendId);
-        User user = getById(id);
-        User friend = getById(friendId);
+        getById(id);
+        getById(friendId);
 
-        user.getFriends().add(friendId);
-        friend.getFriends().add(id);
+        userStorage.addFriend(id, friendId);
 
-        return user;
+        return getById(id);
     }
 
     public User removeFriend(Long id, Long friendId) {
         checkDifferentUsers(id, friendId);
-        User user = getById(id);
-        User friend = getById(friendId);
+        getById(id);
+        getById(friendId);
 
-        user.getFriends().remove(friendId);
-        friend.getFriends().remove(id);
+        userStorage.removeFriend(id, friendId);
 
-        return user;
+        return getById(id);
     }
 
     public List<User> getFriends(Long id) {

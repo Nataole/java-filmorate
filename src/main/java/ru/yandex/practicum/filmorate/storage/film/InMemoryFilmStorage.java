@@ -33,4 +33,27 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Optional<Film> getById(Long id) {
         return Optional.ofNullable(films.get(id));
     }
+
+    @Override
+    public void addLike(Long filmId, Long userId) {
+        films.get(filmId).getLikes().add(userId);
+    }
+
+    @Override
+    public void removeLike(Long filmId, Long userId) {
+        films.get(filmId).getLikes().remove(userId);
+    }
+
+    @Override
+    public List<Film> getPopularFilms(Integer count) {
+        return films.values().stream()
+                .sorted((film1, film2) ->
+                        Integer.compare(
+                                film2.getLikes().size(),
+                                film1.getLikes().size()
+                        )
+                )
+                .limit(count)
+                .toList();
+    }
 }
