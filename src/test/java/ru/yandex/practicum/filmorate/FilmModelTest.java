@@ -32,7 +32,10 @@ public class FilmModelTest {
                 "Description",
                 LocalDate.of(2000, 1, 1),
                 120L,
-                 new HashSet<>()
+                new HashSet<>(),
+                null,
+                new HashSet<>()
+
         );
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
@@ -48,6 +51,8 @@ public class FilmModelTest {
                 "Description",
                 LocalDate.of(2000, 1, 1),
                 120L,
+                new HashSet<>(),
+                null,
                 new HashSet<>()
         );
 
@@ -64,6 +69,8 @@ public class FilmModelTest {
                 "a".repeat(201),
                 LocalDate.of(2000, 1, 1),
                 120L,
+                new HashSet<>(),
+                null,
                 new HashSet<>()
         );
 
@@ -80,6 +87,8 @@ public class FilmModelTest {
                 "a".repeat(200),
                 LocalDate.of(2000, 1, 1),
                 100L,
+                new HashSet<>(),
+                null,
                 new HashSet<>()
         );
 
@@ -96,6 +105,8 @@ public class FilmModelTest {
                 "Description",
                 LocalDate.of(1895, 12, 27),
                 120L,
+                new HashSet<>(),
+                null,
                 new HashSet<>()
         );
 
@@ -112,6 +123,8 @@ public class FilmModelTest {
                 "Description",
                 LocalDate.of(1895, 12, 28),
                 120L,
+                new HashSet<>(),
+                null,
                 new HashSet<>()
         );
 
@@ -129,6 +142,8 @@ public class FilmModelTest {
                 "Description",
                 LocalDate.of(2000, 1, 1),
                 -1L,
+                new HashSet<>(),
+                null,
                 new HashSet<>()
         );
 
@@ -145,6 +160,8 @@ public class FilmModelTest {
                 "Description",
                 LocalDate.of(2000, 1, 1),
                 0L,
+                new HashSet<>(),
+                null,
                 new HashSet<>()
         );
 

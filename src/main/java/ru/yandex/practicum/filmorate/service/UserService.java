@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
 
-
 @Service
 public class UserService {
 
@@ -43,43 +42,36 @@ public class UserService {
 
     public User addFriend(Long id, Long friendId) {
         checkDifferentUsers(id, friendId);
-        User user = getById(id);
-        User friend = getById(friendId);
+        getById(id);
+        getById(friendId);
 
-        user.getFriends().add(friendId);
-        friend.getFriends().add(id);
+        userStorage.addFriend(id, friendId);
 
-        return user;
+        return getById(id);
     }
 
     public User removeFriend(Long id, Long friendId) {
         checkDifferentUsers(id, friendId);
-        User user = getById(id);
-        User friend = getById(friendId);
+        getById(id);
+        getById(friendId);
 
-        user.getFriends().remove(friendId);
-        friend.getFriends().remove(id);
+        userStorage.removeFriend(id, friendId);
 
-        return user;
+        return getById(id);
     }
 
     public List<User> getFriends(Long id) {
-        User user = getById(id);
-
-        return user.getFriends().stream()
-                .map(this::getById)
-                .toList();
+        getById(id);
+        return userStorage.getFriends(id);
     }
 
     public List<User> getCommonFriends(Long id, Long otherId) {
         checkDifferentUsers(id, otherId);
-        User user = getById(id);
-        User otherUser = getById(otherId);
 
-        return user.getFriends().stream()
-                .filter(otherUser.getFriends()::contains)
-                .map(this::getById)
-                .toList();
+        getById(id);
+        getById(otherId);
+
+        return userStorage.getCommonFriends(id, otherId);
     }
 
     private void setNameIfEmpty(User user) {
