@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -11,7 +10,10 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
@@ -20,7 +22,9 @@ public class FilmService {
     private final GenreStorage genreStorage;
     private final MpaStorage mpaStorage;
 
-    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage, @Qualifier("userDbStorage") UserStorage userStorage, GenreStorage genreStorage,
+    public FilmService(FilmStorage filmStorage,
+                       UserStorage userStorage,
+                       GenreStorage genreStorage,
                        MpaStorage mpaStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
@@ -86,7 +90,6 @@ public class FilmService {
         return filmStorage.getPopularFilms(count);
     }
 
-
     private void checkUserExists(Long userId) {
         userStorage.getById(userId)
                 .orElseThrow(() ->
@@ -110,18 +113,24 @@ public class FilmService {
                             ));
         }
 
-        if (film.getGenres() != null) {
-            for (Genre genre : film.getGenres()) {
-                if (genre.getId() == null) {
-                    throw new NotFoundException("Жанр не найден");
-                }
+        if (film.getGenres() != null && !film.getGenres().isEmpty()) {
+            Set<Integer> genreIds = film.getGenres().stream()
+                    .map(Genre::getId)
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
 
-                genreStorage.getById(genre.getId())
-                        .orElseThrow(() ->
-                                new NotFoundException(
-                                        "Жанр с id=" + genre.getId() + " не найден"
-                                ));
+            if (genreIds.contains(null)) {
+                throw new NotFoundException("Жанр не найден");
             }
+
+            List<Genre> genres = genreStorage.getByIds(genreIds);
+
+            if (genres.size() != genreIds.size()) {
+                throw new NotFoundException(
+                        "Один или несколько жанров не найдены"
+                );
+            }
+
+            film.setGenres(new LinkedHashSet<>(genres));
         }
     }
 }

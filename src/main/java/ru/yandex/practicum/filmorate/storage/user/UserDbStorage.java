@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-@Repository("userDbStorage")
+@Repository
 public class UserDbStorage implements UserStorage {
 
     private final JdbcTemplate jdbcTemplate;
@@ -78,15 +78,10 @@ public class UserDbStorage implements UserStorage {
         String sql = """
                 SELECT id, email, login, name, birthday
                 FROM users
+                ORDER BY id
                 """;
 
-        List<User> users = jdbcTemplate.query(sql, (rs, rowNum) -> mapRowToUser(rs));
-
-        users.forEach(user ->
-                user.setFriends(getFriendIds(user.getId()))
-        );
-
-        return users;
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapRowToUser(rs));
     }
 
     @Override
@@ -161,6 +156,51 @@ public class UserDbStorage implements UserStorage {
                 """;
 
         jdbcTemplate.update(sql, userId, friendId);
+    }
+
+    @Override
+    public List<User> getFriends(Long userId) {
+        String sql = """
+            SELECT u.id,
+                   u.email,
+                   u.login,
+                   u.name,
+                   u.birthday
+            FROM users u
+            JOIN friendships f ON u.id = f.friend_id
+            WHERE f.user_id = ?
+            ORDER BY u.id
+            """;
+
+        return jdbcTemplate.query(
+                sql,
+                (rs, rowNum) -> mapRowToUser(rs),
+                userId
+        );
+    }
+
+    @Override
+    public List<User> getCommonFriends(Long userId, Long otherId) {
+        String sql = """
+            SELECT u.id,
+                   u.email,
+                   u.login,
+                   u.name,
+                   u.birthday
+            FROM users u
+            JOIN friendships f1 ON u.id = f1.friend_id
+            JOIN friendships f2 ON u.id = f2.friend_id
+            WHERE f1.user_id = ?
+              AND f2.user_id = ?
+            ORDER BY u.id
+            """;
+
+        return jdbcTemplate.query(
+                sql,
+                (rs, rowNum) -> mapRowToUser(rs),
+                userId,
+                otherId
+        );
     }
 }
 
